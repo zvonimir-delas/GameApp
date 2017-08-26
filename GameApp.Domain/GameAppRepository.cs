@@ -30,6 +30,14 @@ namespace GameApp.Domain
             }
         }
 
+        public Match GetMatchByName(string name)
+        {
+            using (var context = new GameAppContext())
+            {
+                return context.Matches.Where(x => x.Name == name).FirstOrDefault();
+            }
+        }
+
         public string CreateNewPlayer(string firstName, string lastName, string phoneNumber, string email)
         {
             using (var context = new GameAppContext())
@@ -113,7 +121,7 @@ namespace GameApp.Domain
             }
         }
 
-        public string CreateNewMatch(string nameOfTeam1, string nameOfTeam2, string matchName)
+        public string CreateNewMatch(string nameOfTeam1, string nameOfTeam2, string matchName, bool isTournamentMatch = false)
         {
             using (var context = new GameAppContext())
             {
@@ -124,12 +132,15 @@ namespace GameApp.Domain
                 if (team1 == null || team2 == null)
                     return "Team(s) do(es) not exist";
 
+                if (GetMatchByName(matchName) == null)
+                    return "Match already exists";
+
                 context.Matches.Add(new Match()
                 {
                     Name = matchName,
                     Team1 = team1,
                     Team2 = team2,
-                    IsTournamentMatch = false
+                    IsTournamentMatch = isTournamentMatch
                 });
                 context.SaveChanges();
 
@@ -138,6 +149,52 @@ namespace GameApp.Domain
         }
 
 
+        public string CreateNewTournament(string name, string nameOfTeam1, string nameOfTeam2, string nameOfTeam3, string nameOfTeam4, string nameOfMatch1, string nameOfMatch2)
+        {
+            using (var context = new GameAppContext())
+            {
+                var shuffledMatches = Organizer(nameOfTeam1, nameOfTeam2, nameOfTeam3, nameOfTeam4, nameOfMatch1, nameOfMatch2);
+
+                if (shuffledMatches.Any(x => x.Team1 == null || x.Team2 == null))
+                    return "One of the teams does not exist";
+
+                context.Tournaments.Add(new Tournament()
+                {
+                    StartDate = DateTime.Now,
+                    Name = name,
+                    Matches = shuffledMatches
+                });
+
+                return "Tournament added";
+            }
+        }
+
+        private static Random rng = new Random();
+
+        public List<Match> Organizer(string nameOfTeam1, string nameOfTeam2, string nameOfTeam3, string nameOfTeam4, string nameOfMatch1, string nameOfMatch2)
+        {
+            var namesOfTeams = new List<string>() { nameOfTeam1, nameOfTeam2, nameOfTeam3, nameOfTeam4 };
+
+            var namesOfTeamsShuffled = namesOfTeams.OrderBy(x => rng.Next()).ToList();
+
+            var matches = new List<Match>();
+
+            CreateNewMatch(namesOfTeams.ElementAt(0), namesOfTeams.ElementAt(1), nameOfMatch1, true);
+
+            using (var context = new GameAppContext())
+            {
+                matches.Add(GetMatchByName(nameOfMatch1));
+            }
+
+            CreateNewMatch(namesOfTeams.ElementAt(2), namesOfTeams.ElementAt(3), nameOfMatch2, true);
+
+            using (var context = new GameAppContext())
+            {
+                matches.Add(GetMatchByName(nameOfMatch2));
+            }
+
+            return matches;
+        }
 
     }
 }
