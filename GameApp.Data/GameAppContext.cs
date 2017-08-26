@@ -17,7 +17,7 @@ namespace GameApp.Data
 
         public virtual DbSet<Player> Players { get; set; }
         public virtual DbSet<Match> Matches { get; set; }
-        public virtual DbSet<Team> teams { get; set; }
+        public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<Tournament> Tournaments { get; set; }
     }
 }
