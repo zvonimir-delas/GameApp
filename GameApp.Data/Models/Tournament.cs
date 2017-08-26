@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameApp.Data.Models
 {
-    public class Tournaments
+    public class Tournament
     {
         public int Id { get; set; }
         public DateTime StartDate { get; set; }

@@ -10,11 +10,11 @@ namespace GameApp.Data.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public enum Round { final, half final, qualification }
+        public enum Round { final, halffinal, qualification }
         public bool IsTournamentMatch { get; set; }
 
-        public Team team1 { get; set; }
-        public Team team2 { get; set; }
+        public Team Team1 { get; set; }
+        public Team Team2 { get; set; }
     }
 
 }
