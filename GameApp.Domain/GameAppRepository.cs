@@ -179,19 +179,11 @@ namespace GameApp.Domain
 
             var matches = new List<Match>();
 
-            CreateNewMatch(namesOfTeams.ElementAt(0), namesOfTeams.ElementAt(1), nameOfMatch1, true);
-
-            using (var context = new GameAppContext())
-            {
+                CreateNewMatch(namesOfTeams.ElementAt(0), namesOfTeams.ElementAt(1), nameOfMatch1, true);
                 matches.Add(GetMatchByName(nameOfMatch1));
-            }
 
-            CreateNewMatch(namesOfTeams.ElementAt(2), namesOfTeams.ElementAt(3), nameOfMatch2, true);
-
-            using (var context = new GameAppContext())
-            {
+                CreateNewMatch(namesOfTeams.ElementAt(2), namesOfTeams.ElementAt(3), nameOfMatch2, true);
                 matches.Add(GetMatchByName(nameOfMatch2));
-            }
 
             return matches;
         }
